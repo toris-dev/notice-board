@@ -1,0 +1,17 @@
+package egovframework.example.sample.service;
+
+public class SampleReply extends SampleDefaultVO {
+
+	private String authorId;
+
+	private String replyComment;
+
+	public String getReplyComment() {
+		return this.replyComment;
+	}
+	
+	public String getAuthorId() {
+		return this.authorId;
+	}
+
+}

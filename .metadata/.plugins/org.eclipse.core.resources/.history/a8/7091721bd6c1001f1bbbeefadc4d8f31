@@ -1,0 +1,61 @@
+-- SAMPLE 테이블 생성
+CREATE MEMORY TABLE SAMPLE (
+    ID VARCHAR(16) NOT NULL PRIMARY KEY,       -- 샘플의 고유 ID (Primary Key)
+    NAME VARCHAR(50),                          -- 샘플의 제목 (타이틀)
+    DESCRIPTION VARCHAR(100),                  -- 샘플의 내용 (본문)
+    USE_YN CHAR(1),                            -- 샘플 사용 여부 ('Y' 또는 'N')
+    REG_USER VARCHAR(10),                     -- 샘플을 등록한 사용자
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 시간
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- 수정 시간
+);
+-- IDS 테이블 생성
+CREATE MEMORY TABLE IDS (
+    TABLE_NAME VARCHAR(16) NOT NULL PRIMARY KEY, -- 테이블 이름 (Primary Key)
+    NEXT_ID DECIMAL(30) NOT NULL                -- 다음 사용할 ID 값
+);
+
+-- COMMENT 테이블 생성
+CREATE MEMORY TABLE COMMENT (
+    COMMENT_ID DECIMAL(30) NOT NULL PRIMARY KEY,    -- 댓글 고유 ID
+    SAMPLE_ID VARCHAR(16) NOT NULL,                 -- 관련된 게시글 ID (외래키)
+    COMMENT_TEXT VARCHAR(255) NOT NULL,             -- 댓글 내용
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 시간 (기본값: 현재 시간)
+    REPLY_COMMENT VARCHAR(255),                     -- 대댓글
+    COMMENT_COUNT DECIMAL(30)                       -- 댓글 수
+);
+
+-- PUBLIC 스키마 설정
+SET SCHEMA PUBLIC;
+
+INSERT INTO SAMPLE (ID, NAME, DESCRIPTION, USE_YN, REG_USER, CREATED_AT, UPDATED_AT) VALUES
+('SAMPLE-00001', 'Runtime Environment - Foundation Layer', '이 샘플은 실행 환경을 설정하는 데 사용됩니다.', 'Y', 'eGov', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('SAMPLE-00002', 'Runtime Environment - Persistence Layer', 'DB 설정을 쉽게 할 수 있는 방법이 궁금해요.', 'Y', 'eGov', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('SAMPLE-00003', 'Runtime Environment - Presentation Layer', 'API 통합을 위한 첫 단계가 무엇인가요?', 'Y', 'eGov', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('SAMPLE-00004', 'Runtime Environment - Business Layer', '보안 설정을 강화하려면 어떤 조치를 취해야 하나요?', 'Y', 'eGov', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
+
+INSERT INTO COMMENT (COMMENT_ID, SAMPLE_ID, COMMENT_TEXT, CREATED_AT, REPLY_COMMENT, COMMENT_COUNT) VALUES
+(1, 'SAMPLE-00001', '이 샘플은 실행 환경을 설정하는 데 사용됩니다.', CURRENT_TIMESTAMP, NULL, 1),
+(2, 'SAMPLE-00002', 'DB 설정을 쉽게 할 수 있는 방법이 궁금해요.', CURRENT_TIMESTAMP, NULL, 2),
+(3, 'SAMPLE-00003', 'API 통합을 위한 첫 단계가 무엇인가요?', CURRENT_TIMESTAMP, '이 문제는 API 문서에 있습니다.', 1),
+(4, 'SAMPLE-00004', '보안 설정을 강화하려면 어떤 조치를 취해야 하나요?', CURRENT_TIMESTAMP, NULL, 1);
+
+
+-- 게시글과 댓글 조회 쿼리
+SELECT
+    SAMPLE.ID AS postId,                -- 게시글 ID
+    SAMPLE.REG_USER AS authorId,        -- 작성자 ID
+    SAMPLE.NAME AS title,               -- 게시글 제목
+    SAMPLE.DESCRIPTION AS content,      -- 게시글 본문
+    SAMPLE.CREATED_AT AS createdAt,     -- 게시글 생성 시간
+    SAMPLE.UPDATED_AT AS updatedAt,     -- 게시글 수정 시간
+    COMMENT.COMMENT_ID,                 -- 댓글 ID
+    COMMENT.COMMENT_TEXT AS content,    -- 댓글 내용
+    COMMENT.CREATED_AT AS commentCreatedAt, -- 댓글 작성 시간
+    COMMENT.REPLY_COMMENT AS replyComment, -- 대댓글
+    COMMENT.COMMENT_COUNT AS commentCount  -- 댓글 갯수
+FROM SAMPLE
+LEFT JOIN COMMENT ON SAMPLE.ID = COMMENT.SAMPLE_ID
+WHERE SAMPLE.USE_YN = 'Y';
+

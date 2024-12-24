@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Post">
+
+    <typeAlias alias="PostVO" type="egovframework.example.sample.service.PostVO"/>
+    <typeAlias alias="CommentVO" type="egovframework.example.sample.service.CommentVO"/>
+    <typeAlias alias="PostListVO" type="egovframework.example.sample.service.PostListVO"/>
+    <typeAlias alias="UserVO" type="egovframework.example.sample.service.UserVO"/>
+
+    <!-- 게시글 VO 매핑 -->
+    <resultMap id="postVO" class="egovframework.example.sample.service.PostVO">
+        <result property="postId" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="authorId" column="author_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- 댓글 VO 매핑 -->
+    <resultMap id="commentVO" class="egovframework.example.sample.service.CommentVO">
+        <result property="commentId" column="comment_id"/>
+        <result property="authorId" column="author_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="comment_text"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="replyComment" column="reply_comment"/>
+        <result property="count" column="count"/>
+    </resultMap>
+
+    <!-- 게시글 삽입 -->
+	<insert id="insertPost">
+	    <![CDATA[
+	        INSERT INTO POSTS 
+	            (id, title, content, author_id, created_at, updated_at)
+	        VALUES 
+	            (#{postId}, #{title}, #{content}, #{authorId}, #{createdAt}, #{updatedAt})
+	    ]]>
+	</insert>
+
+    <!-- 게시글 조회 -->
+    <select id="selectPost" resultMap="postVO">
+        <![CDATA[
+            SELECT 
+                id, title, content, author_id, created_at, updated_at 
+            FROM POSTS 
+            WHERE id = #{postId}
+        ]]>
+    </select>
+
+    <!-- 게시글 목록 조회 -->
+    <select id="selectPostList" resultMap="postVO" parameterClass="PostListVO">
+        <![CDATA[
+            SELECT 
+                id, title, content, author_id, created_at, updated_at
+            FROM POSTS
+            WHERE 1=1
+            <isEqual prepend="AND" property="searchCondition" compareValue="0">
+                title LIKE '%' || #{searchKeyword} || '%'
+            </isEqual>
+            <isEqual prepend="AND" property="searchCondition" compareValue="1">
+                content LIKE '%' || #{searchKeyword} || '%'
+            </isEqual>
+            ORDER BY created_at DESC
+            LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+        ]]>
+    </select>
+
+    <!-- 게시글 총 개수 조회 -->
+    <select id="selectPostListTotCnt" resultClass="int" parameterClass="PostListVO">
+        <![CDATA[
+            SELECT COUNT(*) 
+            FROM POSTS
+            WHERE 1=1
+            <isEqual prepend="AND" property="searchCondition" compareValue="0">
+                title LIKE '%' || #{searchKeyword} || '%'
+            </isEqual>
+            <isEqual prepend="AND" property="searchCondition" compareValue="1">
+                content LIKE '%' || #{searchKeyword} || '%'
+            </isEqual>
+        ]]>
+    </select>
+
+    <!-- 게시글 수정 -->
+    <update id="updatePost">
+        <![CDATA[
+            UPDATE POSTS
+            SET title = #{title}, content = #{content}, updated_at = #{updatedAt}
+            WHERE id = #{postId} AND author_id = #{authorId}
+        ]]>
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost">
+        <![CDATA[
+            DELETE FROM POSTS
+            WHERE id = #{postId} AND author_id = #{authorId}
+        ]]>
+    </delete>
+
+    <!-- 댓글 삽입 -->
+    <insert id="insertComment">
+        <![CDATA[
+            INSERT INTO COMMENTS 
+                (sample_id, comment_text, author_id, created_at, reply_comment, count)
+            VALUES 
+                (#{sampleId}, #{content}, #{authorId}, #{createdAt}, #{replyComment}, #{count})
+        ]]>
+    </insert>
+
+    <!-- 댓글 조회 -->
+    <select id="selectComment" resultMap="commentVO">
+        <![CDATA[
+            SELECT 
+                comment_id, sample_id, comment_text, author_id, created_at, reply_comment, count
+            FROM COMMENTS
+            WHERE comment_id = #{commentId}
+        ]]>
+    </select>
+
+    <!-- 댓글 목록 조회 (sampleId 기준) -->
+    <select id="selectCommentListBySampleId" resultMap="commentVO">
+        <![CDATA[
+            SELECT 
+                comment_id, sample_id, comment_text, author_id, created_at, reply_comment, count
+            FROM COMMENTS
+            WHERE sample_id = #{sampleId}
+            ORDER BY created_at DESC
+        ]]>
+    </select>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment">
+        <![CDATA[
+            UPDATE COMMENTS
+            SET comment_text = #{content}, reply_comment = #{replyComment}, count = #{count}
+            WHERE comment_id = #{commentId} AND author_id = #{authorId}
+        ]]>
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment">
+        <![CDATA[
+            DELETE FROM COMMENTS
+            WHERE comment_id = #{commentId} AND author_id = #{authorId}
+        ]]>
+    </delete>
+
+</sqlMap>

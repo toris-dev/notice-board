@@ -1,0 +1,97 @@
+-- POST 테이블 생성
+CREATE MEMORY TABLE POST (
+    POST_ID VARCHAR(16) NOT NULL PRIMARY KEY, -- 게시글의 고유 ID (Primary Key)
+    AUTHOR_ID VARCHAR(10),                    -- 작성자 ID
+    TITLE VARCHAR(100),                       -- 게시글 제목
+    CONTENT VARCHAR(1000),                    -- 게시글 내용
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 게시글 생성 시간
+    UPDATED_AT TIMESTAMP,                     -- 게시글 업데이트 시간
+    USE_YN CHAR(1),                           -- 게시글 사용 여부 ('Y' 또는 'N')
+    REG_USER VARCHAR(10)                      -- 게시글을 등록한 사용자
+);
+
+-- COMMENT 테이블 생성
+CREATE MEMORY TABLE COMMENT (
+    COMMENT_ID DECIMAL(30) NOT NULL PRIMARY KEY, -- 댓글 고유 ID
+    POST_ID VARCHAR(16) NOT NULL,                -- 관련된 게시글 ID (외래키)
+    AUTHOR_ID VARCHAR(10),                       -- 댓글 작성자 ID
+    CONTENT VARCHAR(255) NOT NULL,               -- 댓글 내용
+    REPLY_COMMENT VARCHAR(255),                  -- 대댓글 (옵션)
+    COMMENT_COMMENT_COUNT DECIMAL(30),                   -- 댓글 갯수 (COMMENT_COUNT에서 이름 변경)
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 시간
+    UPDATED_AT TIMESTAMP,                       -- 댓글 업데이트 시간
+    USE_YN CHAR(1),                             -- 댓글 사용 여부 ('Y' 또는 'N')
+    REG_USER VARCHAR(10)                        -- 댓글을 등록한 사용자
+);
+
+-- USER 테이블 생성
+CREATE MEMORY TABLE USER (
+    USER_ID VARCHAR(10) NOT NULL PRIMARY KEY, -- 사용자 고유 ID (Primary Key)
+    PASSWORD VARCHAR(255) NOT NULL,           -- 비밀번호
+    NICKNAME VARCHAR(50),                    -- 사용자 닉네임
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 계정 생성 시간
+    UPDATED_AT TIMESTAMP,                    -- 계정 업데이트 시간
+    USE_YN CHAR(1) DEFAULT 'Y',              -- 계정 사용 여부 ('Y' 또는 'N')
+    REG_USER VARCHAR(10)                     -- 계정을 등록한 사용자
+);
+
+CREATE TRIGGER update_comment_count_on_insert
+AFTER INSERT ON COMMENT
+FOR EACH ROW
+BEGIN
+    UPDATE COMMENT
+    SET COMMENT_COMMENT_COUNT = COMMENT_COMMENT_COUNT + 1
+    WHERE COMMENT_ID = NEW.COMMENT_ID;
+    
+    UPDATE POST
+    SET COMMENT_COUNT = COMMENT_COUNT + 1
+    WHERE POST_ID = NEW.POST_ID;
+END;
+
+CREATE TRIGGER update_comment_count_on_delete
+AFTER DELETE ON COMMENT
+FOR EACH ROW
+BEGIN
+    UPDATE COMMENT
+    SET COMMENT_COMMENT_COUNT = COMMENT_COMMENT_COUNT - 1
+    WHERE COMMENT_ID = OLD.COMMENT_ID;
+    
+    UPDATE POST
+    SET COMMENT_COUNT = COMMENT_COUNT - 1
+    WHERE POST_ID = OLD.POST_ID;
+END;
+
+-- PUBLIC 스키마 설정
+SET SCHEMA PUBLIC;
+-- USER 테이블에 계정 데이터 삽입
+INSERT INTO USER (USER_ID, PASSWORD, NICKNAME, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES ('user1', 'password1', 'nickname1', CURRENT_TIMESTAMP, NULL, 'Y', 'admin');
+INSERT INTO USER (USER_ID, PASSWORD, NICKNAME, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES ('user2', 'password2', 'nickname2', CURRENT_TIMESTAMP, NULL, 'Y', 'admin');
+INSERT INTO USER (USER_ID, PASSWORD, NICKNAME, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES ('user3', 'password3', 'nickname3', CURRENT_TIMESTAMP, NULL, 'Y', 'admin');
+INSERT INTO USER (USER_ID, PASSWORD, NICKNAME, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES ('user4', 'password4', 'nickname4', CURRENT_TIMESTAMP, NULL, 'Y', 'admin');
+INSERT INTO USER (USER_ID, PASSWORD, NICKNAME, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES ('user5', 'password5', 'nickname5', CURRENT_TIMESTAMP, NULL, 'Y', 'admin');
+
+-- POST 테이블에 데이터 삽입 (이미 이전에 작성됨)
+INSERT INTO POST VALUES ('POST-00001', 'user1', 'Runtime Environment - Foundation Layer', '이 샘플은 실행 환경을 설정하는 데 사용됩니다.', CURRENT_TIMESTAMP, NULL, 'Y', 'user1');
+INSERT INTO POST VALUES ('POST-00002', 'user2', 'Runtime Environment - Persistence Layer', 'DB 설정을 쉽게 할 수 있는 방법이 궁금해요.', CURRENT_TIMESTAMP, NULL, 'Y', 'user2');
+INSERT INTO POST VALUES ('POST-00003', 'user3', 'Runtime Environment - Presentation Layer', 'API 통합을 위한 첫 단계가 무엇인가요?', CURRENT_TIMESTAMP, NULL, 'Y', 'user3');
+INSERT INTO POST VALUES ('POST-00004', 'user4', 'Runtime Environment - Business Layer', '보안 설정을 강화하려면 어떤 조치를 취해야 하나요?', CURRENT_TIMESTAMP, NULL, 'Y', 'user4');
+
+-- COMMENT 테이블에 댓글 데이터 삽입 (이미 이전에 작성됨)
+INSERT INTO COMMENT (COMMENT_ID, POST_ID, AUTHOR_ID, CONTENT, REPLY_COMMENT, COMMENT_COUNT, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES (1, 'POST-00001', 'user1', '이 샘플은 실행 환경을 설정하는 데 사용됩니다.', NULL, 0, CURRENT_TIMESTAMP, NULL, 'Y', 'user1');
+INSERT INTO COMMENT (COMMENT_ID, POST_ID, AUTHOR_ID, CONTENT, REPLY_COMMENT, COMMENT_COUNT, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES (2, 'POST-00002', 'user2', 'DB 설정을 쉽게 할 수 있는 방법이 궁금해요.', NULL, 0, CURRENT_TIMESTAMP, NULL, 'Y', 'user2');
+INSERT INTO COMMENT (COMMENT_ID, POST_ID, AUTHOR_ID, CONTENT, REPLY_COMMENT, COMMENT_COUNT, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES (3, 'POST-00003', 'user3', 'API 통합을 위한 첫 단계가 무엇인가요?', NULL, 0, CURRENT_TIMESTAMP, NULL, 'Y', 'user3');
+INSERT INTO COMMENT (COMMENT_ID, POST_ID, AUTHOR_ID, CONTENT, REPLY_COMMENT, COMMENT_COUNT, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES (4, 'POST-00004', 'user4', '보안 설정을 강화하려면 어떤 조치를 취해야 하나요?', NULL, 0, CURRENT_TIMESTAMP, NULL, 'Y', 'user4');
+
+-- 추가 게시글 및 댓글 삽입
+INSERT INTO POST VALUES('POST-00005', 'user5', 'Runtime Environment - Batch Layer', '배치 환경 설정을 위한 설명입니다.', CURRENT_TIMESTAMP, NULL, 'Y', 'user5');
+INSERT INTO COMMENT (COMMENT_ID, POST_ID, AUTHOR_ID, CONTENT, REPLY_COMMENT, COMMENT_COUNT, CREATED_AT, UPDATED_AT, USE_YN, REG_USER) 
+VALUES (5, 'POST-00005', 'user5', '배치 환경 설정에 대해 더 자세히 설명해주세요.', NULL, 0, CURRENT_TIMESTAMP, NULL, 'Y', 'user5');

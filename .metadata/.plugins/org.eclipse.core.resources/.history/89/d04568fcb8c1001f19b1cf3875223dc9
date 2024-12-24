@@ -1,0 +1,44 @@
+package egovframework.example.sample.service;
+
+public class CommentVO {
+
+}
+public class CommentVO {
+    private String commentId;  // 댓글 ID
+    private String commentText;  // 댓글 내용
+    private String commenter;  // 작성자
+    private String createdDate;  // 댓글 작성일
+
+    // Getter and Setter methods
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
+
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+    public String getCommenter() {
+        return commenter;
+    }
+
+    public void setCommenter(String commenter) {
+        this.commenter = commenter;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+}
