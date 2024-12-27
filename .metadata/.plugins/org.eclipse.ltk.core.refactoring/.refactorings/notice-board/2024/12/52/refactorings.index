@@ -13,3 +13,11 @@
 1735027356360	Rename resource 'post_sql.xml'
 1735027618933	Rename resource 'post_example_SQL.xml'
 1735030448483	Encapsulate field 'postId'
+1735268113202	Delete element
+1735268117912	Delete element
+1735268122686	Delete element
+1735275199814	Delete element
+1735275438566	Delete element
+1735276402218	Rename type 'User'
+1735281858692	Rename resource 'sample.css'
+1735286511779	Rename type 'PostListVO'

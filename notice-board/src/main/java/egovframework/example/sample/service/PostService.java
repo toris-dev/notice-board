@@ -27,7 +27,7 @@ public interface PostService {
 	 * @return
 	 * @throws Exception
 	 */
-    String createPost(PostVO post, UserVO user) throws Exception;
+    int createPost(PostVO post, UserVO user) throws Exception;
     
     /**
      * 하나의 게시글 상세정보를 가져온다.
@@ -43,7 +43,7 @@ public interface PostService {
      * @return
      * @throws Exception
      */
-    List<?> getAllPosts(PostListVO searchVO) throws Exception;
+    List<PostVO> getAllPosts(SearchVO searchVO) throws Exception;
     
     /**
      * 하나의 게시글을 수정한다.
@@ -69,51 +69,7 @@ public interface PostService {
      * @return
      * @throws Exception
      */
-    int selectPostListTotCnt(PostListVO searchVO) throws Exception; // 추가된 메서드
+    int selectPostListTotCnt(SearchVO searchVO) throws Exception; // 추가된 메서드
     
-    // 댓글 관련
-    /**
-     * 하나의 댓글을 추가한다.
-     * @param comment
-     * @param user
-     * @return
-     * @throws Exception
-     */
-    String addComment(CommentVO comment, UserVO user) throws Exception;
-    /**
-     * 댓글을 수정한다.
-     * @param comment
-     * @param user
-     * @return
-     * @throws Exception
-     */
-    boolean updateComment(CommentVO comment, UserVO user) throws Exception;
-    
-    /**
-     * 댓글을 삭제한다.
-     * @param commentId
-     * @param user
-     * @return
-     * @throws Exception
-     */
-    boolean deleteComment(String commentId, UserVO user) throws Exception;
-    
-    /**
-     * 해당하는 게시글의 댓글을 가져온다.
-     * @param postId
-     * @return
-     * @throws Exception
-     */
-    List<CommentVO> getCommentsByPostId(String postId) throws Exception;
-    
-    // 사용자 인증 관련
-    /**
-     * 사용자 정보를 검증한다.
-     * @param user
-     * @return
-     * @throws Exception
-     */
-    boolean validateUser(UserVO user) throws Exception;
-	
 	
 }

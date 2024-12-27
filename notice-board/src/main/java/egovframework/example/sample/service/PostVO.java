@@ -17,7 +17,7 @@ package egovframework.example.sample.service;
 
 import java.util.List;
 
-public class PostVO extends PostListVO {
+public class PostVO extends SearchVO {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,11 +30,11 @@ public class PostVO extends PostListVO {
     
     private List<CommentVO> comments; // 댓글 리스트
 
-	public String getBoardId() {
+	public String getPostId() {
 		return postId;
 	}
 
-	public void setBoardId(String postId) {
+	public void setPostId(String postId) {
 		this.postId = postId;
 	}
 
@@ -70,11 +70,11 @@ public class PostVO extends PostListVO {
 		this.createdAt = createdAt;
 	}
 
-	public String getUpdated_at() {
+	public String getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdated_at(String updatedAt) {
+	public void setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

@@ -2,5 +2,10 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.SampleVO"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+<fullyQualifiedTypeName name="java.sql.Date"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.CommentVO"/>
+<fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ResponseBody"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.UserVO"/>
 </qualifiedTypeNameHistroy>

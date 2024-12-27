@@ -34,6 +34,7 @@ import egovframework.rte.fdl.cmmn.exception.handler.ExceptionHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
 
 /**
  * @Class Name : EgovSampleOthersExcepHndlr.java
@@ -64,5 +65,14 @@ public class EgovSampleOthersExcepHndlr implements ExceptionHandler {
 	public void occur(Exception exception, String packageName) {
 		LOGGER.debug("EgovServiceExceptionHandler run...............");
 	}
+	
+    private static final Logger logger = LoggerFactory.getLogger(EgovSampleOthersExcepHndlr.class);
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+    public String handleException(Exception e, Model model) {
+        logger.error("Unhandled exception occurred: ", e);
+        model.addAttribute("errorMessage", e.getMessage());
+        return "common/error"; // 에러 페이지 경로
+    }
 
 }

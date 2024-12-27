@@ -8,7 +8,6 @@ public class CommentVO {
     private String content; // 글 본문
     private String createdAt;
 	private String replyComment; // 대댓글
-    private Number count; // 댓글 갯수
     
     public String getCreatedAt() {
     	return createdAt;
@@ -43,13 +42,6 @@ public class CommentVO {
 	}
 	public void setReplyComment(String replyComment) {
 		this.replyComment = replyComment;
-	}
-	
-	public Number getCount() {
-		return count;
-	}
-	public void setCount(Number count) {
-		this.count = count;
 	}
 	
 	public String getTitle() {

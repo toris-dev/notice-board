@@ -17,17 +17,17 @@ package egovframework.example.sample.web;
 
 import java.util.List;
 
+import egovframework.example.sample.service.CommentService;
 import egovframework.example.sample.service.CommentVO;
 import egovframework.example.sample.service.PostService;
-import egovframework.example.sample.service.PostListVO;
+import egovframework.example.sample.service.SearchVO;
 import egovframework.example.sample.service.UserVO;
 import egovframework.example.sample.service.PostVO;
-
+import egovframework.example.sample.service.UserService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -39,26 +39,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
-/**
- * @Class Name : EgovSampleController.java
- * @Description : EgovSample Controller Class
- * @Modification Information
- * @ @ 수정일 수정자 수정내용 @ --------- --------- ------------------------------- @
- *   2009.03.16 최초생성
- *
- * @author 개발프레임웍크 실행환경 개발팀
- * @since 2009. 03.16
- * @version 1.0
- * @see
- *
- * 		Copyright (C) by MOPAS All right reserved.
- */
+
 
 @Controller
 public class EgovSampleController {
-
-	@Resource(name = "anonymouspostService")
+	@Resource(name = "postService")
 	private PostService postService;
+
+	@Resource(name = "commentService")
+	private CommentService commentService;
+	
+	@Resource(name = "userService")
+	private UserService userService;
 
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
@@ -68,7 +60,7 @@ public class EgovSampleController {
 
 	// 게시글 목록 조회
 	@RequestMapping(value = "/list.do")
-	public String getPostList(@ModelAttribute("searchVO") PostListVO searchVO, ModelMap model) throws Exception {
+	public String getPostList(@ModelAttribute("searchVO") SearchVO searchVO, ModelMap model) throws Exception {
 		// 페이징 설정
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
 		searchVO.setPageSize(propertiesService.getInt("pageSize"));
@@ -82,21 +74,21 @@ public class EgovSampleController {
 		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
-		List<?> postList = postService.getAllPosts(searchVO);
+		List<PostVO> postList = postService.getAllPosts(searchVO);
+	    
 		model.addAttribute("resultList", postList);
 
 		int totCnt = postService.selectPostListTotCnt(searchVO);
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
-
 		return "board/list";
 	}
-
+	
 	// 게시글 상세 조회
 	@RequestMapping(value = "/view.do")
 	public String getPost(@RequestParam("postId") String postId, Model model) throws Exception {
 		PostVO post = postService.getPost(postId);
-		List<CommentVO> comments = postService.getCommentsByPostId(postId);
+		List<CommentVO> comments = commentService.getCommentsByPostId(postId); // 댓글 조회는 CommentService로
 
 		model.addAttribute("post", post);
 		model.addAttribute("comments", comments);
@@ -120,7 +112,7 @@ public class EgovSampleController {
 			return "board/write";
 		}
 
-		if (postService.validateUser(userVO)) {
+		if (userService.validateUser(userVO)) {
 			postService.createPost(postVO, userVO);
 			return "redirect:/board/list.do";
 		} else {
@@ -148,7 +140,7 @@ public class EgovSampleController {
 		}
 
 		if (postService.updatePost(postVO, userVO)) {
-			return "redirect:/board/view.do?postId=" + postVO.getBoardId();
+			return "redirect:/board/view.do?postId=" + postVO.getPostId();
 		} else {
 			model.addAttribute("message", "Invalid user credentials");
 			return "board/edit";
@@ -174,8 +166,8 @@ public class EgovSampleController {
 	public String writeComment(@ModelAttribute("commentVO") CommentVO commentVO,
 			@ModelAttribute("userVO") UserVO userVO) throws Exception {
 
-		String postId = postService.addComment(commentVO, userVO);
-		if(postId.isEmpty()) {
+		int postId = commentService.addComment(commentVO, userVO); // CommentService 호출
+		if(postId != -1) {
 			return "redirect:/board/view.do?postId=" + postId;
 		} else {
 			return "redirect:/board/list.do";
@@ -188,7 +180,7 @@ public class EgovSampleController {
 	public boolean editComment(@ModelAttribute("commentVO") CommentVO commentVO,
 			@ModelAttribute("userVO") UserVO userVO) throws Exception {
 
-		return postService.updateComment(commentVO, userVO);
+		return commentService.updateComment(commentVO, userVO); // CommentService 호출
 	}
 
 	// 댓글 삭제
@@ -197,6 +189,6 @@ public class EgovSampleController {
 	public boolean deleteComment(@RequestParam("commentId") String commentId, @ModelAttribute("userVO") UserVO userVO)
 			throws Exception {
 
-		return postService.deleteComment(commentId, userVO);
+		return commentService.deleteComment(commentId, userVO); // CommentService 호출
 	}
 }

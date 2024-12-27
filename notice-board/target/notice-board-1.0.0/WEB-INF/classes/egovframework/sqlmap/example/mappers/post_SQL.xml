@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.example.sample.service.impl.PostMapper">
+
+    <!-- Post 결과 매핑 -->
+    <resultMap id="postResultMap" type="egovframework.example.sample.service.PostVO">
+        <result property="postId" column="postId"/>
+        <result property="authorId" column="authorId"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="updatedAt" column="updatedAt"/>
+        <collection property="comments" ofType="egovframework.example.sample.service.CommentVO" 
+                    select="selectCommentsByPostId" column="postId"/>
+    </resultMap>
+
+    <!-- Comment 결과 매핑 -->
+    <resultMap id="commentResultMap" type="egovframework.example.sample.service.CommentVO">
+        <result property="commentId" column="commentId"/>
+        <result property="postId" column="postId"/>
+        <result property="authorId" column="authorId"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="replyComment" column="replyComment"/>
+    </resultMap>
+
+    <!-- 게시글 삽입 -->
+    <insert id="insertPost" parameterType="PostVO">
+        INSERT INTO POSTS 
+            (postId, authorId, title, content, createdAt, updatedAt)
+        VALUES
+            (#{postId}, #{authorId}, #{title}, #{content}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <!-- 게시글 조회 -->
+    <select id="selectPost" resultMap="postResultMap">
+        SELECT
+            postId,
+            authorId,
+            title,
+            content,
+            createdAt,
+            updatedAt
+        FROM POSTS
+        WHERE postId = #{postId}
+    </select>
+
+    <!-- 게시글 리스트 조회 -->
+    <select id="selectPostList" parameterType="PostListVO" resultMap="postResultMap">
+        SELECT
+            postId,
+            authorId,
+            title,
+            content,
+            createdAt,
+            updatedAt
+        FROM POSTS
+        WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchCondition == 0">
+                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+                </when>
+                <when test="searchCondition == 1">
+                    AND content LIKE CONCAT('%', #{searchKeyword}, '%')
+                </when>
+            </choose>
+        </if>
+        ORDER BY createdAt DESC
+        LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+    </select>
+
+    <!-- 게시글 총 개수 조회 -->
+    <select id="selectPostListTotCnt" parameterType="PostListVO" resultType="int">
+        SELECT COUNT(*) 
+        FROM POSTS
+        WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchCondition == 0">
+                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+                </when>
+                <when test="searchCondition == 1">
+                    AND content LIKE CONCAT('%', #{searchKeyword}, '%')
+                </when>
+            </choose>
+        </if>
+    </select>
+
+    <!-- 게시글 수정 -->
+    <update id="updatePost" parameterType="PostVO">
+        UPDATE POSTS
+        SET 
+            title = #{title},
+            content = #{content},
+            updatedAt = #{updatedAt}
+        WHERE postId = #{postId} 
+        AND authorId = #{authorId}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost" parameterType="PostVO">
+        DELETE FROM POSTS
+        WHERE postId = #{postId}
+        AND authorId = #{authorId}
+    </delete>
+
+    <!-- 댓글 삽입 -->
+    <insert id="insertComment" parameterType="CommentVO">
+        INSERT INTO COMMENTS
+            (commentId, postId, authorId, title, content, createdAt, replyComment)
+        VALUES
+            (#{commentId}, #{postId}, #{authorId}, #{title}, #{content}, 
+             #{createdAt}, #{replyComment})
+    </insert>
+
+    <!-- 댓글 조회 -->
+    <select id="selectComment" resultMap="commentResultMap">
+        SELECT
+            commentId,
+            postId,
+            authorId,
+            title,
+            content, 
+            createdAt,
+            replyComment
+        FROM COMMENTS
+        WHERE commentId = #{commentId}
+    </select>
+
+    <!-- 게시글의 댓글 목록 조회 -->
+    <select id="selectCommentsByPostId" parameterType="string" resultMap="commentResultMap">
+        SELECT
+            commentId,
+            postId,
+            authorId,
+            title,
+            content,
+            createdAt,
+            replyComment
+        FROM COMMENTS
+        WHERE postId = #{postId}
+        ORDER BY createdAt DESC
+    </select>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="CommentVO">
+        UPDATE COMMENTS
+        SET 
+            content = #{content},
+            replyComment = #{replyComment}
+        WHERE commentId = #{commentId} 
+        AND authorId = #{authorId}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="CommentVO">
+        DELETE FROM COMMENTS
+        WHERE commentId = #{commentId}
+        AND authorId = #{authorId}
+    </delete>
+
+</mapper>

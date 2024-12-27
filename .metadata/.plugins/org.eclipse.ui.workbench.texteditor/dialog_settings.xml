@@ -6,29 +6,34 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="(" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="boardId"/>
-			<item value="body"/>
-			<item value=".error"/>
-			<item value="image.error"/>
-			<item value="updateSample"/>
-			<item value="update"/>
-			<item value="sampleService"/>
-			<item value="MERGE INTO IDS KEY(TABLE_NAME) VALUES (&apos;SAMPLE&apos;, 1), (&apos;COMMENTS&apos;, 1);"/>
-			<item value="selectSampleById"/>
-			<item value="comment"/>
-			<item value="initVariables"/>
-			<item value="paginationInfo"/>
-			<item value="pagena"/>
-			<item value="page"/>
-			<item value="Binder"/>
+			<item value="("/>
+			<item value="insert"/>
+			<item value="#"/>
+			<item value="postId"/>
+			<item value="reg_user "/>
+			<item value="COMMENT_COUNT"/>
+			<item value="COMMENT_COMMENT_COUNT"/>
+			<item value="NEW.COMMENT_ID"/>
+			<item value="ATOMIC"/>
+			<item value="USER"/>
+			<item value="user"/>
+			<item value="COUNT"/>
+			<item value="insertSample"/>
+			<item value="Incorrect"/>
+			<item value="sqlMapClient"/>
 		</list>
 		<list key="replacehistory">
+			<item value="COMMENT_COUNT"/>
+			<item value="content"/>
+			<item value="body"/>
+			<item value="postService"/>
+			<item value="PostDAO"/>
 			<item value=""/>
 			<item value="width:100%"/>
 		</list>
