@@ -13,13 +13,13 @@
 			type="egovframework.rte.psl.dataaccess.util.EgovMap" />
 
 		<typeAlias alias="postVO"
-			type="egovframework.example.sample.service.PostVO" />
-		<typeAlias alias="commentVO"
-			type="egovframework.example.sample.service.CommentVO" />
-		<typeAlias alias="userVO"
-			type="egovframework.example.sample.service.UserVO" />
+			type="egovframework.example.post.dto.PostVO" />
 		<typeAlias alias="searchVO"
-			type="egovframework.example.sample.service.SearchVO" />
+			type="egovframework.example.post.dto.SearchVO" />
+		<typeAlias alias="commentVO"
+			type="egovframework.example.comment.dto.CommentVO" />
+		<typeAlias alias="userVO"
+			type="egovframework.example.user.dto.UserVO" />
 	</typeAliases>
 
 	<mappers>

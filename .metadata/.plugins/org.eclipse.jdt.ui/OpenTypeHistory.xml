@@ -3,4 +3,10 @@
 <typeInfo handle="=notice-board/C:\/Users\/DESKTOP\/.m2\/repository\/org\/apache\/ibatis\/ibatis-sqlmap\/2.3.4.726\/ibatis-sqlmap-2.3.4.726.jar&lt;com.ibatis.sqlmap.client(SqlMapClient.class[SqlMapClient" modifiers="1537" timestamp="1735000767993"/>
 <typeInfo handle="=notice-board/src\/main\/java&lt;egovframework.example.cmmn.web{EgovImgPaginationRenderer.java[EgovImgPaginationRenderer" modifiers="1" timestamp="1735017901236"/>
 <typeInfo handle="=notice-board/C:\/Users\/DESKTOP\/.m2\/repository\/egovframework\/rte\/egovframework.rte.psl.dataaccess\/3.8.0\/egovframework.rte.psl.dataaccess-3.8.0.jar&lt;egovframework.rte.psl.dataaccess.util(EgovMap.class[EgovMap" modifiers="33" timestamp="1735000764269"/>
+<typeInfo handle="=notice-board/C:\/Users\/DESKTOP\/.m2\/repository\/org\/springframework\/spring-tx\/4.3.16.RELEASE\/spring-tx-4.3.16.RELEASE.jar&lt;org.springframework.dao.support(DaoSupport.class[DaoSupport" modifiers="1057" timestamp="1735000766712"/>
+<typeInfo handle="=notice-board/C:\/Users\/DESKTOP\/.m2\/repository\/org\/hsqldb\/hsqldb\/2.3.2\/hsqldb-2.3.2.jar&lt;org.hsqldb.lib(CountdownInputStream.class[CountdownInputStream" modifiers="49" timestamp="1735000768528"/>
+<typeInfo handle="=notice-board/C:\/Users\/DESKTOP\/.m2\/repository\/egovframework\/rte\/egovframework.rte.psl.dataaccess\/3.8.0\/egovframework.rte.psl.dataaccess-3.8.0.jar&lt;egovframework.rte.psl.dataaccess(EgovAbstractDAO.class[EgovAbstractDAO" modifiers="1057" timestamp="1735000764269"/>
+<typeInfo handle="=notice-board/C:\/Users\/DESKTOP\/.m2\/repository\/org\/mybatis\/mybatis-spring\/1.3.0\/mybatis-spring-1.3.0.jar&lt;org.mybatis.spring(SqlSessionFactoryBean.class[SqlSessionFactoryBean" modifiers="33" timestamp="1735000768069"/>
+<typeInfo handle="=notice-board/C:\/Users\/DESKTOP\/.m2\/repository\/org\/mybatis\/mybatis\/3.4.1\/mybatis-3.4.1.jar&lt;org.apache.ibatis.session(SqlSessionFactory.class[SqlSessionFactory" modifiers="1537" timestamp="1735000768038"/>
+<typeInfo handle="=notice-board/src\/main\/java&lt;egovframework.example.sample.service.impl{PostDAO.java[PostDAO" modifiers="1" timestamp="1735286511668"/>
 </typeInfoHistroy>

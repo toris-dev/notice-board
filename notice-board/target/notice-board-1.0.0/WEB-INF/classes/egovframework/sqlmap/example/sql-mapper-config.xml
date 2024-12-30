@@ -18,6 +18,12 @@
 			type="egovframework.example.sample.service.CommentVO" />
 		<typeAlias alias="userVO"
 			type="egovframework.example.sample.service.UserVO" />
+		<typeAlias alias="searchVO"
+			type="egovframework.example.sample.service.SearchVO" />
 	</typeAliases>
 
+	<mappers>
+		<mapper resource="egovframework/sqlmap/example/mappers/post_SQL.xml" />
+		<mapper resource="egovframework/sqlmap/example/mappers/comment_SQL.xml" />
+	</mappers>
 </configuration>

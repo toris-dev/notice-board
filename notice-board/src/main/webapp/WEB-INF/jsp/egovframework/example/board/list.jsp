@@ -4,7 +4,8 @@
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
 <head>
@@ -12,34 +13,29 @@
 <title><spring:message code="title.sample" /></title>
 <link type="text/css" rel="stylesheet"
 	href="<c:url value='/css/egovframework/index.css'/>" />
-<script>
-	// resultList를 JSON 형태로 출력
-
-	console.log($resultList);
-</script>
 </head>
 
 <body>
 	<script>
-		function fn_egov_link_page(pageNo) {
-			document.listForm.pageIndex.value = pageNo;
-			document.listForm.action = "<c:url value='/list.do'/>";
-			document.listForm.submit();
+		function fn_egov_link_page(pageIndex) {
+			window.location.href = "<c:url value='/list.do'/>?pageIndex="
+					+ pageIndex;
 		}
 
-        function handleNavigation(postId) {
-            // 여기서 postId를 활용하여 게시글 상세 페이지로 이동
-            window.location.href = "<c:url value='/view.do'/>?postId=" + postId;
-        }
+		function handleNavigation(postId) {
+			// 여기서 postId를 활용하여 게시글 상세 페이지로 이동
+			window.location.href = "<c:url value='/detailView.do'/>?postId="
+					+ postId;
+		}
 	</script>
 	<div class='container'>
-		<h2>자유 게시판</h2>
 
+		<%@ include file="/WEB-INF/jsp/egovframework/example/cmmn/Header.jsp"%>
 		<table class='posts'>
 			<caption class="text-center">자유롭게 사용하는 게시판입니다.</caption>
 			<thead>
 				<tr class='posts-title'>
-					<th class='posts-number'>글 번호</th>
+					<th class='posts-number'>번호</th>
 					<th class='posts-title'>제목</th>
 					<th class='posts-author'>작성자</th>
 					<th class='posts-created'>생성일</th>
@@ -51,7 +47,8 @@
 						<td>${post.getPostId()}</td>
 						<td>${post.getTitle()}</td>
 						<td>${post.getAuthorId()}</td>
-						<td>${post.getCreatedAt()}</td>
+						<td><fmt:formatDate value="${post.getCreatedAt()}"
+								pattern="yyyy.MM.dd HH:mm" /></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -60,6 +57,7 @@
 			<ui:pagination paginationInfo="${paginationInfo}" type="text"
 				jsFunction="fn_egov_link_page" />
 		</div>
+
 
 	</div>
 
