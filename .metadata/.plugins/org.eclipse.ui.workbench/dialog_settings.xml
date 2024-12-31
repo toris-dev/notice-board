@@ -8,18 +8,33 @@
 		<item value="250" key="dialogHeight"/>
 		<item value="350" key="dialogWidth"/>
 		<list key="textEntries">
+			<item value="1"/>
+			<item value="1"/>
 		</list>
 		<list key="orderedElements">
+			<item value="org.eclipse.recommenders.models.rcp.views.dependencyOverview"/>
+			<item value="org.eclipse.m2e.core.views.MavenBuild"/>
 		</list>
 		<list key="orderedProviders">
+			<item value="org.eclipse.e4.ui.parts"/>
+			<item value="org.eclipse.e4.ui.parts"/>
 		</list>
 		<list key="textArray">
+			<item value="depe"/>
+			<item value="maven"/>
 		</list>
 	</section>
 	<section name="NewWizardAction">
-		<item value="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<item value="org.eclipse.jdt.ui.wizards.NewClassCreationWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
-			<item value="org.eclipse.wst.web.ui"/>
+			<item value="org.eclipse.emf.codegen.ecore.ui.wizardCategory"/>
+			<item value="org.eclipse.jst.ejb.ui"/>
+			<item value="org.eclipse.jdt.ui.java"/>
+			<item value="org.eclipse.jdt.ui.java/org.eclipse.jdt.debug.ui.java"/>
+			<item value="org.eclipse.jdt.ui.java/org.eclipse.jdt.junit"/>
+			<item value="org.eclipse.jst.j2ee.internal"/>
+			<item value="org.eclipse.emf.codegen.ui.JETNewWizards"/>
+			<item value="org.eclipse.wst.jsdt.ui.java"/>
 		</list>
 	</section>
 </section>

@@ -1,97 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="egovframework.example.sample.service.impl.PostMapper">
+<mapper
+	namespace="egovframework.example.post.mapper.PostMapper">
 
-    <!-- Post 결과 매핑 -->
-    <resultMap id="postResultMap" type="postVO">
-        <result property="postId" column="postId"/>
-        <result property="authorId" column="authorId"/>
-        <result property="title" column="title"/>
-        <result property="content" column="content"/>
-        <result property="createdAt" column="createdAt"/>
-        <result property="updatedAt" column="updatedAt"/>
-    </resultMap>
+	<!-- Post 결과 매핑 -->
+	<resultMap id="postResultMap" type="postVO">
+		<result property="postId" column="postId" />
+		<result property="authorId" column="authorId" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="createdAt" column="createdAt" javaType="java.util.Date" />
+		<result property="updatedAt" column="updatedAt" javaType="java.util.Date" />
+	</resultMap>
 
-    <!-- 게시글 삽입 -->
-    <insert id="createPost" parameterType="postVO">
-        INSERT INTO POSTS 
-            (postId, authorId, title, content, createdAt, updatedAt)
-        VALUES
-            (#{postId}, #{authorId}, #{title}, #{content}, #{createdAt}, #{updatedAt})
-    </insert>
+	<!-- 게시글 삽입 -->
+	<insert id="createPost" parameterType="postVO">
+		INSERT INTO POSTS
+		(postId, authorId, title, content, createdAt, updatedAt)
+		VALUES
+		(#{postId}, #{authorId}, #{title}, #{content}, #{createdAt}, #{updatedAt})
+	</insert>
 
-    <!-- 게시글 조회 -->
-    <select id="getPost" resultMap="postResultMap">
-        SELECT
-            postId,
-            authorId,
-            title,
-            content,
-            createdAt,
-            updatedAt
-        FROM POSTS
-        WHERE postId = #{postId}
-    </select>
+	<!-- 게시글 조회 -->
+	<select id="getPost" resultMap="postResultMap">
+		SELECT
+		postId,
+		authorId,
+		title,
+		content,
+		createdAt,
+		updatedAt
+		FROM POSTS
+		WHERE postId = #{postId}
+	</select>
 
-    <!-- 게시글 리스트 조회 -->
-    <select id="getAllPosts" parameterType="searchVO" resultMap="postResultMap">
-        SELECT
-            postId,
-            authorId,
-            title,
-            content,
-            createdAt,
-            updatedAt
-        FROM POSTS
-        WHERE 1=1
-        <if test="searchKeyword != null and searchKeyword != ''">
-            <choose>
-                <when test="searchCondition == 0">
-                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-                </when>
-                <when test="searchCondition == 1">
-                    AND content LIKE CONCAT('%', #{searchKeyword}, '%')
-                </when>
-            </choose>
-        </if>
-        ORDER BY createdAt DESC
-        LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
-    </select>
+	<!-- 게시글 리스트 조회 -->
+	<select id="getAllPosts" parameterType="searchVO"
+		resultMap="postResultMap">
+		SELECT
+		postId,
+		authorId,
+		title,
+		content,
+		createdAt,
+		updatedAt
+		FROM POSTS
+		WHERE 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			<choose>
+				<when test="searchCondition == 0">
+					AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+				</when>
+				<when test="searchCondition == 1">
+					AND content LIKE CONCAT('%', #{searchKeyword}, '%')
+				</when>
+			</choose>
+		</if>
+		ORDER BY postId DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
 
-    <!-- 게시글 총 개수 조회 -->
-    <select id="selectPostListTotCnt" parameterType="searchVO" resultType="int">
-        SELECT COUNT(*) 
-        FROM POSTS
-        WHERE 1=1
-        <if test="searchKeyword != null and searchKeyword != ''">
-            <choose>
-                <when test="searchCondition == 0">
-                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-                </when>
-                <when test="searchCondition == 1">
-                    AND content LIKE CONCAT('%', #{searchKeyword}, '%')
-                </when>
-            </choose>
-        </if>
-    </select>
+	<!-- 게시글 총 개수 조회 -->
+	<select id="selectPostListTotCnt" parameterType="searchVO"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM POSTS
+		WHERE 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			<choose>
+				<when test="searchCondition == 0">
+					AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+				</when>
+				<when test="searchCondition == 1">
+					AND content LIKE CONCAT('%', #{searchKeyword}, '%')
+				</when>
+			</choose>
+		</if>
+	</select>
 
-    <!-- 게시글 수정 -->
-    <update id="updatePost" parameterType="postVO">
-        UPDATE POSTS
-        SET 
-            title = #{title},
-            content = #{content},
-            updatedAt = #{updatedAt}
-        WHERE postId = #{postId} 
-        AND authorId = #{authorId}
-    </update>
+	<!-- 게시글 수정 -->
+	<update id="updatePost" parameterType="postVO">
+		UPDATE POSTS
+		SET
+		title = #{title},
+		content = #{content},
+		updatedAt = #{updatedAt}
+		WHERE postId = #{postId}
+		AND authorId = #{authorId}
+	</update>
 
-    <!-- 게시글 삭제 -->
-    <delete id="deletePost" parameterType="postVO">
-        DELETE FROM POSTS
-        WHERE postId = #{postId}
-        AND authorId = #{authorId}
-    </delete>
+	<!-- 게시글 삭제 -->
+	<delete id="deletePost" parameterType="postVO">
+		DELETE FROM POSTS
+		WHERE postId = #{postId}
+		AND authorId = #{authorId}
+	</delete>
 
 </mapper>

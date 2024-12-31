@@ -11,8 +11,8 @@ public interface UserMapper {
 	// userId로 사용자 조회
 	UserVO getUserById(String userId) throws Exception;
 
-	// username으로 사용자 조회
-	UserVO getUserByUsername(String username) throws UsernameNotFoundException;
+	// userId으로 사용자 조회
+	UserVO getUserByUserId(String userId) throws UsernameNotFoundException;
 
 	// 사용자 삽입
 	void insertUser(UserVO user) throws Exception;

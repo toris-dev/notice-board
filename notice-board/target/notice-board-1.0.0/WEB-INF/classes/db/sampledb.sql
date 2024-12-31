@@ -23,43 +23,170 @@ CREATE MEMORY TABLE COMMENTS (
     regUser VARCHAR(10)                        -- 댓글을 등록한 사용자
 );
 
--- USER 테이블 생성
+-- USER 테이블 생성 (otpEnabled, otpSecret 추가)
 CREATE MEMORY TABLE USERS (
-    userId VARCHAR(10) NOT NULL PRIMARY KEY, -- 사용자 고유 ID (Primary Key)
-    password VARCHAR(255) NOT NULL,           -- 비밀번호
-    nickname VARCHAR(50),                    -- 사용자 닉네임
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 계정 생성 시간
-    updatedAt TIMESTAMP,                    -- 계정 업데이트 시간
-    useYn CHAR(1) DEFAULT 'Y',              -- 계정 사용 여부 ('Y' 또는 'N')
-    regUser VARCHAR(10)                     -- 계정을 등록한 사용자
+    userId VARCHAR(10) NOT NULL PRIMARY KEY,         -- 사용자 고유 ID (Primary Key)
+    password VARCHAR(255) NOT NULL,                   -- 비밀번호
+    nickname VARCHAR(50),                             -- 사용자 닉네임
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- 계정 생성 시간
+    updatedAt TIMESTAMP,                              -- 계정 업데이트 시간
+    useYn CHAR(1) DEFAULT 'Y',                        -- 계정 사용 여부 ('Y' 또는 'N')
+    regUser VARCHAR(10),                              -- 계정을 등록한 사용자
+    otpEnabled BOOLEAN DEFAULT FALSE,                   -- OTP 활성화 여부 ('Y' 또는 'N')
+    otpSecret VARCHAR(255)                            -- OTP 시크릿 키
 );
 
 -- PUBLIC 스키마 설정
 SET SCHEMA PUBLIC;
 
--- USER 테이블에 계정 데이터 삽입
-INSERT INTO USERS (userId, password, nickname, createdAt, updatedAt, useYn, regUser) 
+-- USER 테이블에 계정 데이터 삽입 (otpEnabled, otpSecret 포함)
+INSERT INTO USERS (userId, password, nickname, createdAt, updatedAt, useYn, regUser, otpEnabled, otpSecret) 
 VALUES 
-    ('user1', 'password1', 'nickname1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin'),
-    ('user2', 'password2', 'nickname2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin'),
-    ('user3', 'password3', 'nickname3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin'),
-    ('user4', 'password4', 'nickname4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin'),
-    ('user5', 'password5', 'nickname5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin');
-
+	('user', '$2a$12$3a.lWP9XMUgDG9dNC9V18.8E7LTzHJOJh/6Mo7uamVNlLmPoPC0Cq', 'nickname0', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),    
+	('user1', '$2a$12$2F2PTykAAoHMITpbBijlGuTI7VDtE.ZkhAlxZ2eYOh6xPC/7ESu2G', 'nickname1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user2', '$2a$12$TL4B.yftEfTEHQxCE/fx6uK5LmtozvcmoiAGHzedT1rqE2VxSDRcW', 'nickname2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user3', '$2a$12$0AhVTvoSPjfg/npyYBHXO.Joy91uO2OKfWwDR3Bz3kjmriRqrMtDy', 'nickname3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user4', '$2a$12$kSZWH22Csp1bmcqdcCpu3ed.cm.R2YlZ.X8Z8AVFJxNVJNFl5I5NK', 'nickname4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user5', '$2a$12$XZD9MLaQl5XgnuFWauebSe7WV1osXzMW.h5Y42jT0Na78p50L/Fne', 'nickname5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL);
 INSERT INTO POSTS (authorId, title, content, createdAt, updatedAt, useYn, regUser) 
 VALUES 
-    ('user1', 'Runtime Environment - Foundation Layer', '이 샘플은 실행 환경을 설정하는 데 사용됩니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
-    ('user2', 'Runtime Environment - Persistence Layer', 'DB 설정을 쉽게 할 수 있는 방법이 궁금해요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
-    ('user3', 'Runtime Environment - Presentation Layer', 'API 통합을 위한 첫 단계가 무엇인가요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
-    ('user4', 'Runtime Environment - Business Layer', '보안 설정을 강화하려면 어떤 조치를 취해야 하나요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4');
+    ('user1', '운영 환경 - 기초 설정', '이 샘플은 시스템의 기초 설정을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '운영 환경 - 데이터 저장소', '데이터베이스의 설정과 활용 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '운영 환경 - 사용자 인터페이스', '사용자 인터페이스의 기본 구조와 디자인을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '운영 환경 - 네트워크 관리', '네트워크 구성을 효율적으로 관리하는 방법을 알려드립니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '운영 환경 - 보안 설정', '시스템 보안을 강화하는 기본적인 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '데이터 처리 - 실시간 처리', '실시간 데이터 처리의 중요성과 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '데이터 처리 - 대량 처리', '대량 데이터를 처리하는 방법과 그에 따른 문제 해결 방안을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '데이터 처리 - 배치 처리', '배치 처리 시스템의 구성과 최적화 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '데이터 처리 - API 연동', 'API 연동을 위한 표준 절차와 처리 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '프론트엔드 - HTML/CSS', 'HTML과 CSS를 활용한 웹 페이지 구조를 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '프론트엔드 - 자바스크립트 기초', '자바스크립트의 기본 문법과 활용법을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '프론트엔드 - 반응형 디자인', '반응형 웹 디자인의 원칙과 실습 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '백엔드 - 데이터베이스 설계', '효율적인 데이터베이스 설계 방법을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '백엔드 - RESTful API', 'RESTful API 설계의 기본 원칙과 활용 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '백엔드 - Spring Framework', 'Spring Framework를 활용한 웹 애플리케이션 개발 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '백엔드 - 데이터 처리 최적화', '데이터 처리 성능 최적화의 기초적인 방법을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '백엔드 - 보안 강화', '애플리케이션 보안을 강화하는 다양한 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '운영 환경 - 클라우드 관리', '클라우드 환경을 효율적으로 관리하는 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '운영 환경 - 시스템 모니터링', '시스템의 상태를 실시간으로 모니터링하는 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '운영 환경 - 장애 대응', '시스템 장애 발생 시 대응 방법과 절차를 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '운영 환경 - 서버 배포', '서버 배포의 최적화 방법과 주의사항을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '개발 프로세스 - Agile 방법론', 'Agile 개발 방법론을 통해 효율적인 개발을 할 수 있는 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '개발 프로세스 - CI/CD', 'CI/CD 파이프라인을 구축하여 자동화하는 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '개발 프로세스 - 코드 리뷰', '효율적인 코드 리뷰 방법과 도구를 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '소프트웨어 개발 - 디자인 패턴', '소프트웨어 디자인 패턴의 기본 원칙과 활용 방법을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '소프트웨어 개발 - 객체 지향 프로그래밍', '객체 지향 프로그래밍의 기본 개념과 활용법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '소프트웨어 개발 - 리팩토링', '리팩토링의 필요성과 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '소프트웨어 개발 - 테스트 주도 개발', '테스트 주도 개발(TDD)의 기본 개념과 실습 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '소프트웨어 개발 - 코드 품질', '코드 품질을 향상시키는 방법과 도구를 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '개발 도구 - Git 활용법', 'Git을 활용하여 버전 관리하는 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '개발 도구 - Docker 활용법', 'Docker를 사용한 컨테이너 기반 개발 환경 구축 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '개발 도구 - CI/CD 도구', 'CI/CD 도구를 활용하여 자동화하는 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '네트워크 - TCP/IP', 'TCP/IP 프로토콜의 기본 개념과 구조를 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '네트워크 - HTTP 프로토콜', 'HTTP 프로토콜의 구조와 동작 방식을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '네트워크 - DNS 시스템', 'DNS 시스템의 역할과 작동 방식을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '네트워크 - 방화벽 설정', '방화벽을 설정하여 네트워크 보안을 강화하는 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '데이터베이스 - SQL 쿼리', '효율적인 SQL 쿼리 작성 방법을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '데이터베이스 - 인덱스 활용', 'SQL 인덱스를 활용한 성능 최적화 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '데이터베이스 - 트랜잭션 처리', '트랜잭션의 개념과 처리 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '데이터베이스 - NoSQL', 'NoSQL 데이터베이스의 특징과 활용 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '데이터베이스 - 데이터 마이닝', '데이터 마이닝 기법과 실습 방법을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', 'AI/ML - 기계 학습 개론', '기계 학습의 기본 개념과 주요 알고리즘을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', 'AI/ML - 딥러닝 기초', '딥러닝의 기본 개념과 활용 방법을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', 'AI/ML - 자연어 처리', '자연어 처리(NLP)의 기본 개념과 기법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', 'AI/ML - 모델 평가', 'AI 모델을 평가하는 다양한 방법과 지표를 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+     ('user1', '애플리케이션 성능 최적화', '애플리케이션의 성능을 개선하는 방법에 대해 알아봅니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', 'Java 8 Lambda 활용법', 'Java 8에서 도입된 Lambda 표현식에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '데이터베이스 트랜잭션 처리', '트랜잭션을 관리하는 중요한 방법에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', 'Spring Boot로 REST API 개발', 'Spring Boot를 사용해 REST API를 개발하는 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '클라우드 컴퓨팅 개념', '클라우드 컴퓨팅의 기본 개념과 장점에 대해 알아봅니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '웹 애플리케이션 보안', '웹 애플리케이션을 안전하게 개발하는 방법에 대해 알아봅니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '소프트웨어 디자인 패턴', '효율적인 디자인을 위한 소프트웨어 디자인 패턴을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '디지털 마케팅 전략', '디지털 마케팅의 주요 전략을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '프로그래밍 언어 비교', '각 프로그래밍 언어의 특징과 사용 사례를 비교합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '애자일 개발 방법론', '애자일 방법론의 기본 원칙과 실제 적용 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '빅데이터 처리 기술', '빅데이터를 효율적으로 처리하는 기술을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '마이크로서비스 아키텍처', '마이크로서비스 아키텍처의 장점과 구현 방법을 안내합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', 'SQL 최적화 기법', 'SQL 쿼리를 최적화하는 방법에 대해 알아봅니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', 'Docker 활용법', 'Docker를 활용하여 효율적인 개발 환경을 구성하는 방법을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '자바스크립트 비동기 처리', '자바스크립트에서 비동기 처리를 다루는 방법에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '데이터베이스 인덱스 활용', '데이터베이스 성능을 높이는 인덱스 활용 방법에 대해 알아봅니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '운영 체제 개념', '운영 체제의 기본 개념과 역할을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', 'Spring Security 설정', 'Spring Security를 설정하고 활용하는 방법을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '머신 러닝 개념', '머신 러닝의 기본 개념과 주요 알고리즘에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '컴퓨터 네트워크 기초', '컴퓨터 네트워크의 기초 개념을 이해하고 주요 프로토콜을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '유닛 테스트 작성법', '유닛 테스트를 작성하고 실행하는 방법에 대해 배웁니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', 'UI/UX 디자인 원칙', '효율적인 UI/UX 디자인 원칙을 다루고 좋은 예시를 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '인공지능 알고리즘', '인공지능 알고리즘의 종류와 적용 사례를 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '데이터 시각화 기법', '효과적인 데이터 시각화를 위한 기법과 도구들을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '클라우드 서비스 비교', 'AWS, GCP, Azure와 같은 클라우드 서비스를 비교합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '기계학습 모델 평가', '기계학습 모델을 평가하는 다양한 방법에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '프로그램 최적화 기법', '프로그램 성능을 최적화하는 다양한 기법을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '레거시 시스템 개선', '레거시 시스템을 개선하고 현대화하는 방법에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '데이터베이스 백업 전략', '효율적인 데이터베이스 백업 전략에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', '디지털 트랜스포메이션 사례', '디지털 트랜스포메이션의 실제 사례를 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '소프트웨어 품질 관리', '소프트웨어 품질을 관리하고 향상시키는 방법에 대해 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '모바일 앱 개발', '모바일 앱 개발 과정과 주의할 점에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '기업 IT 전략', '효율적인 기업 IT 전략을 세우는 방법에 대해 배웁니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', 'API 문서화 방법', 'API 문서화의 중요성과 그 작성 방법에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '모델링 기법 소개', '효율적인 소프트웨어 모델링 기법에 대해 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '보안 인증 방법', '시스템 보안을 강화하는 인증 방법에 대해 알아봅니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    ('user1', '데이터 마이닝 기법', '데이터 마이닝을 활용하여 통찰을 얻는 방법에 대해 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    ('user2', 'DevOps 실천법', 'DevOps를 실제 프로젝트에 적용하는 방법을 소개합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    ('user3', '기술 블로그 운영', '기술 블로그를 운영하는 방법과 주의점을 설명합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    ('user4', '게임 개발 기초', '게임 개발을 시작하는 데 필요한 기초 지식에 대해 알아봅니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4');
 
+-- COMMENT 테이블에 댓글 데이터 삽입
 -- COMMENT 테이블에 댓글 데이터 삽입
 INSERT INTO COMMENTS (postId, authorId, content, createdAt, updatedAt, useYn, regUser) 
 VALUES 
-    (0, 'user1', '이 샘플은 실행 환경을 설정하는 데 사용됩니다.',  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
-    (1, 'user2', 'DB 설정을 쉽게 할 수 있는 방법이 궁금해요.',  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
-    (2, 'user3', 'API 통합을 위한 첫 단계가 무엇인가요?',  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
-    (3, 'user4', '보안 설정을 강화하려면 어떤 조치를 취해야 하나요?',  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4');
+    (0, 'user1', '이 샘플은 실행 환경을 설정하는 데 사용됩니다. 정말 유용한 정보입니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (1, 'user2', 'DB 설정을 쉽게 할 수 있는 방법이 궁금해요. 어떤 자료를 참고해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (2, 'user3', 'API 통합을 위한 첫 단계가 무엇인가요? 경험이 부족해서 어려운 부분이 많아요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (3, 'user4', '보안 설정을 강화하려면 어떤 조치를 취해야 하나요? 기본적인 설정은 잘 되어 있는데 추가적으로 뭐가 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (4, 'user1', '시스템 보안을 강화하는 방법을 더 알고 싶습니다. 추가적인 자료가 필요해요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (5, 'user2', '실시간 데이터 처리에 대해 더 알고 싶어요. 어떻게 구현할 수 있나요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (6, 'user3', '대량 데이터 처리 시 성능 이슈가 발생할 수 있나요? 해결 방법이 궁금합니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (7, 'user4', '배치 처리 시스템을 구축할 때 주의해야 할 점이 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (8, 'user1', 'API 연동의 표준 절차를 정확히 알고 싶습니다. 어떤 방법이 가장 효율적일까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (9, 'user2', 'HTML과 CSS의 기본적인 사용법을 다시 한번 확인하고 싶어요. 좋은 참고자료가 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (10, 'user3', '자바스크립트 기초를 다시 공부해야 할 것 같아요. 좋은 학습 자료를 알고 싶습니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (11, 'user4', '반응형 디자인에 대해 구체적인 예시를 보고 싶어요. 참고할만한 사이트가 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (12, 'user1', '효율적인 데이터베이스 설계 방법을 배우고 싶습니다. 주의할 점이 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (13, 'user2', 'RESTful API 설계의 원칙에 대해 좀 더 구체적으로 설명해 주실 수 있나요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (14, 'user3', 'Spring Framework를 사용한 웹 애플리케이션 개발을 좀 더 깊이 배우고 싶습니다. 추천할 자료가 있나요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (15, 'user4', '데이터 처리 성능을 최적화하는 방법이 무엇인지 궁금합니다. 실제 적용 사례가 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (16, 'user1', '애플리케이션 보안을 강화하려면 어떤 방법을 우선적으로 적용해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (17, 'user2', '클라우드 관리에 대해 더 깊이 공부하고 싶어요. 어디서부터 시작해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (18, 'user3', '시스템 모니터링을 효과적으로 구현하려면 어떤 도구가 필요할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (19, 'user4', '시스템 장애 대응 방법을 정리한 자료가 있으면 공유해 주세요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (20, 'user1', '서버 배포를 최적화하는 방법을 배우고 싶습니다. 참고할만한 문서가 있나요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (21, 'user2', 'Agile 방법론을 활용한 개발 프로세스를 효율적으로 관리하려면 어떻게 해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (22, 'user3', 'CI/CD 파이프라인 구축 시 주의해야 할 점이 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (23, 'user4', '코드 리뷰의 중요성과 좋은 코드 리뷰 방법을 배우고 싶어요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (24, 'user1', '소프트웨어 디자인 패턴을 공부하려고 하는데 어떤 패턴부터 시작해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (25, 'user2', '객체 지향 프로그래밍의 핵심 개념을 좀 더 깊게 이해하고 싶습니다. 추천할 책이 있나요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (26, 'user3', '리팩토링을 실제 프로젝트에 적용할 때 주의할 점이 무엇인가요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (27, 'user4', 'TDD를 실제 개발에 적용하는 과정에서 발생할 수 있는 문제점은 무엇인가요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (28, 'user1', '코드 품질을 높이기 위한 도구나 방법을 추천해 주세요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (29, 'user2', 'Git을 활용한 버전 관리의 기본 개념을 다시 한번 복습하고 싶습니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (30, 'user3', 'Docker를 사용한 개발 환경 구축 과정에서 주의할 점이 있을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (31, 'user4', 'CI/CD 도구를 사용해 자동화할 때 발생할 수 있는 문제는 무엇인가요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (32, 'user1', 'TCP/IP 프로토콜에 대한 심화 지식을 얻고 싶습니다. 어떤 자료가 좋을까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (33, 'user2', 'HTTP 프로토콜의 동작 방식을 더욱 깊이 이해하고 싶어요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (34, 'user3', 'DNS 시스템의 기능을 더 잘 이해하려면 어떤 자료를 참고해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (35, 'user4', '방화벽 설정을 통해 네트워크 보안을 강화하는 방법을 알려주세요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (36, 'user1', 'SQL 쿼리 최적화에 대해 알고 싶습니다. 성능을 개선할 수 있는 방법이 무엇인가요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (37, 'user2', 'SQL 인덱스를 잘 활용하려면 어떤 점을 고려해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (38, 'user3', '트랜잭션 처리의 중요성에 대해 더 알고 싶습니다. 예시를 들어 설명해 주세요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (39, 'user4', 'NoSQL 데이터베이스를 활용할 때 주의할 점을 알고 싶습니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (40, 'user1', '데이터 마이닝 기법을 활용한 사례가 궁금합니다. 실제 예시를 알려주세요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),
+    (41, 'user2', '기계 학습 알고리즘에 대해 좀 더 알고 싶습니다. 어디서부터 시작해야 할까요?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user2'),
+    (42, 'user3', '딥러닝 기법을 실제 프로젝트에 적용하는 방법에 대해 알고 싶어요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user3'),
+    (43, 'user4', '자연어 처리 기법을 활용한 사례가 궁금합니다. 예시를 공유해 주세요.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user4'),
+    (44, 'user1', 'AI 모델 평가 지표에 대해 좀 더 심도 있게 공부하고 싶습니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1');
+
+
 -- 추가 게시글 및 댓글 삽입
 INSERT INTO POSTS (authorId, title, content, createdAt, updatedAt, useYn, regUser) 
 VALUES ('user5', 'Runtime Environment - Batch Layer', '배치 환경 설정을 위한 설명입니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user5');

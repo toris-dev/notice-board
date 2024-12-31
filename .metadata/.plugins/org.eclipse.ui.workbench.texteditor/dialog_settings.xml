@@ -6,27 +6,27 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="title" key="selection"/>
+		<item value="getUserById" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="TITLE"/>
-			<item value="selectPost"/>
-			<item value="getPost."/>
-			<item value="getPost"/>
-			<item value="tr"/>
-			<item value="container"/>
-			<item value=".container"/>
-			<item value="pagination"/>
-			<item value="getCreatedAt"/>
-			<item value="getBoardId"/>
-			<item value="getBoard"/>
-			<item value="getPostId"/>
-			<item value="At"/>
-			<item value="created"/>
-			<item value="create"/>
+			<item value="getUserById"/>
+			<item value="validateLogin"/>
+			<item value="getUserByUsername"/>
+			<item value=".form-group"/>
+			<item value="public"/>
+			<item value="redirect"/>
+			<item value="anyRequest"/>
+			<item value="authenticationManager"/>
+			<item value="PasswordEncoder"/>
+			<item value="springSecurityFilterChain"/>
+			<item value="error"/>
+			<item value="defaultFailureUrl"/>
+			<item value="userService"/>
+			<item value="passwordEncoder"/>
+			<item value="InMemoryUserDetailsManager"/>
 		</list>
 		<list key="replacehistory">
 			<item value="POST"/>

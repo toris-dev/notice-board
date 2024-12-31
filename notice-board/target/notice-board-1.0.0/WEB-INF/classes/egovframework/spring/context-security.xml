@@ -1,0 +1,38 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <http auto-config="true">
+        <!-- 정적 리소스 허용 -->
+        <intercept-url pattern="/css/**" access="permitAll()" />
+        <intercept-url pattern="/js/**" access="permitAll()" />
+        <intercept-url pattern="/images/**" access="permitAll()" />
+        
+        <!-- 공개 URL 설정 -->
+        <intercept-url pattern="/signin.do" access="permitAll()" />
+        <intercept-url pattern="/signup.do" access="permitAll()" />
+        <intercept-url pattern="/list.do" access="permitAll()" />
+        <intercept-url pattern="/detailView.do" access="permitAll()" />
+        
+        <!-- 나머지 URL은 인증 필요 -->
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        
+        <form-login 
+            login-page="/signin.do"
+            login-processing-url="/signin.do"
+            username-parameter="userId"
+            password-parameter="password"
+            default-target-url="/list.do"
+            always-use-default-target="true"
+            authentication-failure-url="/signin.do?error=true" />
+            
+        <logout 
+            logout-url="/signout.do"
+            logout-success-url="/signin.do"
+            invalidate-session="true" />
+    </http>
+</beans:beans>

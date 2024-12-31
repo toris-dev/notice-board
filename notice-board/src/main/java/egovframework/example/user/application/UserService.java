@@ -1,10 +1,11 @@
 package egovframework.example.user.application;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import egovframework.example.user.dto.UserVO;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 	UserVO getUserById(String userId) throws Exception;
 
 	UserVO getUserByUsername(String username) throws UsernameNotFoundException;

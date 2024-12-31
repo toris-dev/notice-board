@@ -8,21 +8,29 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<http auto-config="true">
-		<intercept-url pattern="/admin/**"
-			access="hasRole('ADMIN')" />
-		<intercept-url pattern="/write.do" access="isAuthenticated()" />
-		<form-login login-page="/signin.do" default-target-url="/"  />
-		<logout logout-success-url="/signout.do" />
-	</http>
+		<!-- 정적 리소스 허용 -->
+		<intercept-url pattern="/css/**" access="permitAll()" />
+		<intercept-url pattern="/js/**" access="permitAll()" />
+		<intercept-url pattern="/images/**" access="permitAll()" />
 
-	<authentication-manager>
-		<authentication-provider>
-			<user-service>
-				<user name="user" password="{noop}password"
-					authorities="ROLE_USER" />
-				<user name="admin" password="{noop}admin"
-					authorities="ROLE_ADMIN" />
-			</user-service>
-		</authentication-provider>
-	</authentication-manager>
+		<!-- 공개 URL 설정 -->
+		<intercept-url pattern="/signin.do" access="permitAll()" />
+		<intercept-url pattern="/signup.do" access="permitAll()" />
+		<intercept-url pattern="/list.do" access="permitAll()" />
+		<intercept-url pattern="/detailView.do"
+			access="permitAll()" />
+
+		<!-- 나머지 URL은 인증 필요 -->
+		<intercept-url pattern="/**" access="isAuthenticated()" />
+
+		<form-login login-page="/signin.do"
+			login-processing-url="/signin.do" username-parameter="userId"
+			password-parameter="password" default-target-url="/list.do"
+			always-use-default-target="true"
+			authentication-failure-url="/signin.do?error=true" />
+
+
+		<logout logout-url="/signout.do"
+			logout-success-url="/signin.do" invalidate-session="true" />
+	</http>
 </beans:beans>

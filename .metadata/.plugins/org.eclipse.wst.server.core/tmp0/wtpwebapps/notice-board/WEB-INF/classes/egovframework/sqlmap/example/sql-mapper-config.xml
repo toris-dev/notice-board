@@ -25,5 +25,6 @@
 	<mappers>
 		<mapper resource="egovframework/sqlmap/example/mappers/post_SQL.xml" />
 		<mapper resource="egovframework/sqlmap/example/mappers/comment_SQL.xml" />
+		<mapper resource="egovframework/sqlmap/example/mappers/user_SQL.xml" />
 	</mappers>
 </configuration>

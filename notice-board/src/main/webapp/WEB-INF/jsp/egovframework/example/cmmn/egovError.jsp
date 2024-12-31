@@ -1,13 +1,18 @@
+<%@ page isErrorPage="true" %>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Error</title>
+    <title>Error Page</title>
 </head>
-
 <body>
-    <spring:message code='fail.common.msg' />
+    <h1>에러가 발생했습니다.</h1>
+    <p>에러 메시지: ${requestScope['javax.servlet.error.message']}</p>
+    <p>에러 타입: ${requestScope['javax.servlet.error.exception_type']}</p>
+    <c:if test="${not empty requestScope['javax.servlet.error.exception']}">
+        <h2>Exception Details:</h2>
+        <pre>
+            <c:out value="${requestScope['javax.servlet.error.exception']}"/>
+        </pre>
+    </c:if>
 </body>
 </html>

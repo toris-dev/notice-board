@@ -32,7 +32,7 @@ CREATE MEMORY TABLE USERS (
     updatedAt TIMESTAMP,                              -- 계정 업데이트 시간
     useYn CHAR(1) DEFAULT 'Y',                        -- 계정 사용 여부 ('Y' 또는 'N')
     regUser VARCHAR(10),                              -- 계정을 등록한 사용자
-    otpEnabled CHAR(1) DEFAULT 'N',                   -- OTP 활성화 여부 ('Y' 또는 'N')
+    otpEnabled BOOLEAN DEFAULT FALSE,                   -- OTP 활성화 여부 ('Y' 또는 'N')
     otpSecret VARCHAR(255)                            -- OTP 시크릿 키
 );
 
@@ -42,11 +42,12 @@ SET SCHEMA PUBLIC;
 -- USER 테이블에 계정 데이터 삽입 (otpEnabled, otpSecret 포함)
 INSERT INTO USERS (userId, password, nickname, createdAt, updatedAt, useYn, regUser, otpEnabled, otpSecret) 
 VALUES 
-    ('user1', 'password1', 'nickname1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', 'N', NULL),
-    ('user2', 'password2', 'nickname2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', 'N', NULL),
-    ('user3', 'password3', 'nickname3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', 'N', NULL),
-    ('user4', 'password4', 'nickname4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', 'N', NULL),
-    ('user5', 'password5', 'nickname5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', 'N', NULL);
+	('user', '$2a$12$3a.lWP9XMUgDG9dNC9V18.8E7LTzHJOJh/6Mo7uamVNlLmPoPC0Cq', 'nickname0', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),    
+	('user1', '$2a$12$2F2PTykAAoHMITpbBijlGuTI7VDtE.ZkhAlxZ2eYOh6xPC/7ESu2G', 'nickname1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user2', '$2a$12$TL4B.yftEfTEHQxCE/fx6uK5LmtozvcmoiAGHzedT1rqE2VxSDRcW', 'nickname2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user3', '$2a$12$0AhVTvoSPjfg/npyYBHXO.Joy91uO2OKfWwDR3Bz3kjmriRqrMtDy', 'nickname3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user4', '$2a$12$kSZWH22Csp1bmcqdcCpu3ed.cm.R2YlZ.X8Z8AVFJxNVJNFl5I5NK', 'nickname4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL),
+    ('user5', '$2a$12$XZD9MLaQl5XgnuFWauebSe7WV1osXzMW.h5Y42jT0Na78p50L/Fne', 'nickname5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'admin', FALSE, NULL);
 INSERT INTO POSTS (authorId, title, content, createdAt, updatedAt, useYn, regUser) 
 VALUES 
     ('user1', '운영 환경 - 기초 설정', '이 샘플은 시스템의 기초 설정을 다룹니다.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Y', 'user1'),

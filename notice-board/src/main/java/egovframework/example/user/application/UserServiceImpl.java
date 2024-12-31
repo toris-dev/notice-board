@@ -1,7 +1,14 @@
 package egovframework.example.user.application;
 
+import java.util.Collections;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,7 +19,7 @@ import egovframework.example.user.dto.UserVO;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
-	@Autowired
+	@Resource(name = "UserDAO")
 	private UserDAO userDAO;
 
 	@Autowired
@@ -75,8 +82,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// 로그인 검증
+	@Override
 	public boolean validateLogin(String userId, String password) throws Exception {
 		UserVO user = userDAO.getUserById(userId); // 사용자 조회
 		return passwordEncoder.matches(password, user.getPassword()); // 암호화된 비밀번호 비교
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+		try {
+			UserVO user = userDAO.getUserById(userId);
+			if (user == null) {
+				throw new UsernameNotFoundException("User not found with username: " + userId);
+			}
+
+			return new User(user.getUserId(), user.getPassword(),
+					Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+		} catch (Exception e) {
+			throw new UsernameNotFoundException("Error loading user", e);
+		}
 	}
 }

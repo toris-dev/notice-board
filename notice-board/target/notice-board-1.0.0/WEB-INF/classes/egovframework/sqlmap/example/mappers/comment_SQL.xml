@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="egovframework.example.sample.service.impl.CommentMapper">
+<mapper namespace="egovframework.example.comment.mapper.CommentMapper">
 
     <resultMap id="commentResultMap" type="commentVO">
         <result property="commentId" column="commentId"/>
         <result property="postId" column="postId"/>
         <result property="authorId" column="authorId"/>
         <result property="content" column="content"/>
-        <result property="createdAt" column="createdAt"/>
+        <result property="createdAt" column="createdAt" javaType="java.util.Date"/>
         <result property="replyComment" column="replyComment"/>
     </resultMap>
 

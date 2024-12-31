@@ -15,6 +15,7 @@
 </head>
 <body>
 	<div class="container">
+		<%@ include file="/WEB-INF/jsp/egovframework/example/cmmn/Header.jsp"%>
 		<form:form class="write-form" action="/write.do" method="POST">
 			<div class="form-header">
 				<h2>글쓰기</h2>
@@ -34,9 +35,9 @@
 				<div class="form-group">
 					<label for="password">비밀번호</label> <input type="password"
 						name="userVO.password" id="password" class="form-user-input"
-						placeholder="비밀번호를 입력하세요" required maxlength="20" /> 
-				</div>			
-			<span class="help-text">※ 글 수정/삭제 시 필요하니 반드시 기억해주세요.</span>
+						placeholder="비밀번호를 입력하세요" required maxlength="20" />
+				</div>
+				<span class="help-text">※ 글 수정/삭제 시 필요하니 반드시 기억해주세요.</span>
 			</div>
 
 			<!-- 게시글 내용 섹션 -->
